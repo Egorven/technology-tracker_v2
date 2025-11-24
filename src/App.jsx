@@ -3,46 +3,32 @@ import './App.css';
 import TechnologyCard from './components/TechnologyCard';
 import ProgressHeader from './components/ProgressHeader';
 import QuickActions from './components/QuickActions';
-import TechnologyNotes from './components/TechnologyNotes';
 import { useState, useEffect} from 'react';
 
 function App() {
-  const [technologies, setTechnologies] = useState([
-    {
-      id: 1, 
-      title: 'React Components', 
-      description: 'Изучение базовых компонентов',
-      status: 'completed',
-      notes: 'hex'
-    },
-    {
-      id: 2, 
-      title: 'JSX Syntax', 
-      description: 'Освоение синтаксиса JSX', 
-      status: 'in-progress',
-      notes: 'sdaasda'
-    },
-    {
-      id: 3, 
-      title: 'State Management', 
-      description: 'Работа с состоянием компонентов', 
-      status: 'not-started',
-      notes: 'sdaasda'
+
+const [technologies, setTechnologies] = useState(() => {
+  const saved = localStorage.getItem('techTrackerData');
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      console.error('Ошибка при загрузке из localStorage, используем начальные данные', e);
     }
-  ]);
+  }
+  //начальные данные
+  return [
+    { id: 1, title: 'React Components', description: 'Изучение базовых компонентов', status: 'completed', notes: '' },
+    { id: 2, title: 'JSX Syntax', description: 'Освоение синтаксиса JSX', status: 'in-progress', notes: '' },
+    { id: 3, title: 'State Management', description: 'Работа с состоянием компонентов', status: 'not-started', notes: '' }
+  ];
+});
 
 
- useEffect(() => { 
-  localStorage.setItem('techTrackerData', JSON.stringify(technologies)); 
-console.log('Данные сохранены в localStorage'); 
+useEffect(() => {
+  localStorage.setItem('techTrackerData', JSON.stringify(technologies));
+  console.log('Данные сохранены в localStorage');
 }, [technologies]);
-useEffect(() => { 
-const saved = localStorage.getItem('techTrackerData'); 
-if (saved) { 
-    setTechnologies(JSON.parse(saved)); 
-console.log('Данные загружены из localStorage'); 
-  } 
-}, []);
   const updateTechnologyNotes = (techId, newNotes) => { 
   setTechnologies(prevTech =>  
     prevTech.map(tech =>  
