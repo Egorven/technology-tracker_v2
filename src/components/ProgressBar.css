@@ -1,0 +1,26 @@
+.progress-bar-container {
+  margin: 16px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.progress-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.progress-label {
+  font-weight: 600;
+}
+
+.progress-percentage {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.progress-bar-inner.animated {
+  transition: width 0.5s ease-in-out !important;
+}

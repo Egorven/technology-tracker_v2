@@ -1,4 +1,5 @@
 import './ProgressHeader.css';
+import ProgressBar from './ProgressBar';
 
 function ProgressHeader({ technologies }) {
     const total = technologies.length;
@@ -14,17 +15,15 @@ function ProgressHeader({ technologies }) {
             <p>Изучено: {completed}</p>
             <p>В процессе: {inprogress}</p>
             <p>Не начато: {notstarted}</p>
-             <p>Процент изучения</p>
-            <div className="progress-bar-container">
-                <div className="progress-bar">
-                    <div 
-                        className="progress-bar-fill" 
-                        style={{ width: `${percentage}%` }}
-                    ></div>
-                </div>
-                <span>{percentage}%</span>
-            </div>
-        </div>
+<ProgressBar
+        progress={percentage}
+        label="Общий прогресс изучения"
+        color="#4CAF50"
+        height={24}
+        showPercentage={true}
+        animated={true}
+      />
+    </div>
     );
 }
 
