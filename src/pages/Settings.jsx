@@ -1,6 +1,4 @@
 // src/pages/Settings.js
-import { useNavigate } from 'react-router-dom';
-
 export default function Settings() {
 
   const username = localStorage.getItem('username') || 'Гость';
