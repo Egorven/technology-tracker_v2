@@ -1,80 +1,72 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+import Home from './pages/Home';
+import TechnologyList from './pages/TechnologyList';
+import TechnologyDetail from './pages/TechnologyDetail'; // ← ЭТО БЫЛО УПУЩЕНО!
+import Statistics from './pages/Statistics';
+import Settings from './pages/Settings';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+
+import Navigation from './components/Navigation';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import './App.css';
-import TechnologyCard from './components/TechnologyCard';
-import ProgressHeader from './components/ProgressHeader';
-import QuickActions from './QuickActions';
-import { useState } from 'react';
-import useTechnologies from './useTechnologies';
 
 function App() {
-  const { technologies, cycleStatus, updateNotes, updateAllToCompleted, resetAllStatuses } = useTechnologies();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all');
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const user = localStorage.getItem('username') || '';
+    setIsLoggedIn(loggedIn);
+    setUsername(user);
+  }, []);
 
-  const filteredTechnologies = technologies.filter(tech => {
-    const matchesSearch = searchQuery
-      ? tech.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tech.description.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
+  const handleLogin = (user) => {
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('username', user);
+    setIsLoggedIn(true);
+    setUsername(user);
+  };
 
-    const matchesFilter = activeFilter === 'all'
-      ? true
-      : tech.status === activeFilter;
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
+    setIsLoggedIn(false);
+    setUsername('');
+  };
 
-    return matchesSearch && matchesFilter;
-  });
-  
   return (
-    <>
-      <div className="technology-progress">
-        <ProgressHeader technologies={technologies} />
-        <QuickActions
-          technologies={technologies}
-          onUpdateAllStatus={updateAllToCompleted}
-          onResetAll={resetAllStatuses}
-        />
-      </div>
+    <Router>
+      <div className="app">
+        <Navigation isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
 
-      <div className="search-box">
-        <input
-          type="text"
-          placeholder="Поиск технологий..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <span>Найдено: {filteredTechnologies.length}</span>
-      </div>
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/technologies" element={<TechnologyList />} />
+            <Route path="/technology/:techId" element={<TechnologyDetail />} />
+            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/settings" element={<Settings />} />
+            
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
 
-      <div className="technology-list">
-        <h2>Список задач</h2>
-        <div className="filter-buttons">
-          {['all', 'not-started', 'in-progress', 'completed'].map(filter => (
-            <button
-              key={filter}
-              className={activeFilter === filter ? 'active' : ''}
-              onClick={() => setActiveFilter(filter)}
-            >
-              {filter === 'all' ? 'Все технологии' :
-               filter === 'not-started' ? 'Не начатые' :
-               filter === 'in-progress' ? 'В процессе' : 'Выполненные'}
-            </button>
-          ))}
-        </div>
-
-        {filteredTechnologies.map(technology => (
-          <TechnologyCard
-            key={technology.id}
-            id={technology.id}
-            title={technology.title}
-            description={technology.description}
-            notes={technology.notes}
-            status={technology.status}
-            onUpdateStatus={cycleStatus}
-            onNotesChange={updateNotes}
-          />
-        ))}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
       </div>
-    </>
+    </Router>
   );
 }
 

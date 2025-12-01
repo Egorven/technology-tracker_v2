@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Modal from './Modal';
+import Modal from '../Modal';
 
 function QuickActions({ onUpdateAllStatus, onResetAll, technologies }) {
   const [showExportModal, setShowExportModal] = useState(false);
