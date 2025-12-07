@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import Home from './pages/Home';
 import TechnologyList from './pages/TechnologyList';
-import TechnologyDetail from './pages/TechnologyDetail'; // ← ЭТО БЫЛО УПУЩЕНО!
+import TechnologyDetail from './pages/TechnologyDetail';
 import Statistics from './pages/Statistics';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
@@ -40,7 +40,6 @@ function App() {
   };
 
   return (
-    <Router>
       <div className="app">
         <Navigation isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
 
@@ -66,7 +65,6 @@ function App() {
           </Routes>
         </main>
       </div>
-    </Router>
   );
 }
 
