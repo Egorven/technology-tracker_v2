@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import Home from './pages/Home';
@@ -12,11 +12,15 @@ import Dashboard from './pages/Dashboard';
 import Navigation from './components/Navigation';
 import ProtectedRoute from './components/ProtectedRoute';
 
+import { NotificationProvider, useNotification } from './components/NotificationBar';
+
 import './App.css';
 
-function App() {
+function AppContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -30,6 +34,12 @@ function App() {
     localStorage.setItem('username', user);
     setIsLoggedIn(true);
     setUsername(user);
+    showNotification({
+      type: 'success',
+      title: 'Успешный вход',
+      message: `Добро пожаловать, ${user}!`,
+    });
+    navigate('/dashboard');
   };
 
   const handleLogout = () => {
@@ -37,6 +47,12 @@ function App() {
     localStorage.removeItem('username');
     setIsLoggedIn(false);
     setUsername('');
+    showNotification({
+      type: 'info',
+      title: 'Выход выполнен',
+      message: 'Вы успешно вышли из аккаунта.',
+    });
+    navigate('/');
   };
 
   return (
@@ -51,7 +67,6 @@ function App() {
           <Route path="/technology/:techId" element={<TechnologyDetail />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/settings" element={<Settings />} />
-
           <Route
             path="/dashboard"
             element={
@@ -60,11 +75,18 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <NotificationProvider>
+      <AppContent />
+    </NotificationProvider>
   );
 }
 

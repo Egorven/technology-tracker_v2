@@ -62,9 +62,6 @@ const { technologies, updateStatusBulk, cycleStatus, updateAllToCompleted, reset
 
       <div className="page-header">
         <h1>Все технологии</h1>
-        <Link to="/add-technology" className="btn btn-primary">
-          + Добавить технологию
-        </Link>
       </div>
 
      <div className="technologies-grid">
@@ -102,9 +99,6 @@ const { technologies, updateStatusBulk, cycleStatus, updateAllToCompleted, reset
               ? 'Технологий пока нет.'
               : 'Ничего не найдено по вашему запросу.'}
           </p>
-          <Link to="/add-technology" className="btn btn-primary">
-            Добавить технологию
-          </Link>
         </div>
       )}
     </div>
