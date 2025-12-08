@@ -40,31 +40,31 @@ function App() {
   };
 
   return (
-      <div className="app">
-        <Navigation isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
+    <div className="app">
+      <Navigation isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
 
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/technologies" element={<TechnologyList />} />
-            <Route path="/technology/:techId" element={<TechnologyDetail />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/settings" element={<Settings />} />
-            
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/technologies" element={<TechnologyList />} />
+          <Route path="/technology/:techId" element={<TechnologyDetail />} />
+          <Route path="/statistics" element={<Statistics />} />
+          <Route path="/settings" element={<Settings />} />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-      </div>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 

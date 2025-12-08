@@ -1,21 +1,25 @@
 import useLocalStorage from './useLocalStorage';
 
 const initialTechnologies = [
-  { 
-    id: 1, 
-    title: 'React Components', 
-    description: 'Изучение базовых компонентов', 
+  {
+    id: 1,
+    title: 'React Components',
+    description: 'Изучение базовых компонентов',
     status: 'not-started',
     notes: '',
-    category: 'frontend'
+    category: 'frontend',
+    originCountry: 'United States',
+     deadline: ''
   },
-  { 
-    id: 2, 
-    title: 'Node.js Basics', 
-    description: 'Основы серверного JavaScript', 
+  {
+    id: 2,
+    title: 'Node.js Basics',
+    description: 'Основы серверного JavaScript',
     status: 'not-started',
     notes: '',
-    category: 'backend'
+    category: 'backend',
+    originCountry: 'United States',
+     deadline: ''
   },
   {
     id: 3,
@@ -23,7 +27,9 @@ const initialTechnologies = [
     description: 'Структура веб-страниц и семантические теги',
     status: 'not-started',
     notes: '',
-    category: 'frontend'
+    category: 'frontend',
+    originCountry: 'United States',
+     deadline: ''
   },
   {
     id: 4,
@@ -31,7 +37,9 @@ const initialTechnologies = [
     description: 'Современные методы вёрстки',
     status: 'not-started',
     notes: '',
-    category: 'frontend'
+    category: 'frontend',
+    originCountry: 'United States',
+     deadline: ''
   },
   {
     id: 5,
@@ -39,7 +47,19 @@ const initialTechnologies = [
     description: 'Система контроля версий и коллаборация',
     status: 'not-started',
     notes: '',
-    category: 'tools'
+    category: 'tools',
+    originCountry: 'United States',
+     deadline: ''
+  },
+  {
+    id: 6,
+    title: 'Python',
+    description: 'Универсальный язык программирования',
+    status: 'not-started',
+    notes: '',
+    category: 'language',
+    originCountry: 'Netherlands',
+     deadline: ''
   }
 ];
 
@@ -61,41 +81,63 @@ function useTechnologies() {
   };
 
   const updateAllToCompleted = () => {
-  setTechnologies(prev =>
-    prev.map(tech => ({ ...tech, status: 'completed' }))
-  );
-};
-
-const resetAllStatuses = () => {
-  setTechnologies(prev =>
-    prev.map(tech => ({ ...tech, status: 'not-started' }))
-  );
-};
-
-  const updateStatus = (techId, newStatus) => {
-    setTechnologies(prev => 
-      prev.map(tech => 
-        tech.id === techId ? { ...tech, status: newStatus } : tech
-      )
+    setTechnologies(prev =>
+      prev.map(tech => ({ ...tech, status: 'completed' }))
     );
   };
 
+  const resetAllStatuses = () => {
+    setTechnologies(prev =>
+      prev.map(tech => ({ ...tech, status: 'not-started' }))
+    );
+  };
+
+const updateStatus = (id, newStatus) => {
+  setTechnologies(prev => {
+    const next = prev.map(tech =>
+      tech.id === id ? { ...tech, status: newStatus } : tech
+    );
+    return next;
+  });
+};
+
   const updateNotes = (techId, newNotes) => {
-    setTechnologies(prev => 
-      prev.map(tech => 
+    setTechnologies(prev =>
+      prev.map(tech =>
         tech.id === techId ? { ...tech, notes: newNotes } : tech
       )
     );
   };
+  const replaceTechnologies = (newTechnologies) => {
+    setTechnologies(newTechnologies);
+  };
+  const updateStatusBulk = (ids, newStatus) => {
+  const idSet = new Set(ids);
+  setTechnologies(prev =>
+    prev.map(tech =>
+      idSet.has(tech.id) ? { ...tech, status: newStatus } : tech
+    )
+  );
+};
+const updateDeadline = (id, newDeadline) => {
+  setTechnologies(prev =>
+  prev.map(tech =>
+    tech.id === id ? { ...tech, deadline: newDeadline } : tech
+  )
+);
+};
 
   return {
     technologies,
     updateStatus,
     updateNotes,
-      cycleStatus,
+    cycleStatus,
     updateAllToCompleted,
     resetAllStatuses,
-    getNextStatus 
+    getNextStatus,
+    replaceTechnologies,
+    updateStatusBulk,
+     updateDeadline
   };
 }
 

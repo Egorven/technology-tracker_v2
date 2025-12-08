@@ -2,14 +2,17 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useTechnologies from '../useTechnologies';
+import useCountryInfo from '../hooks/useCountryInfo';
 
 export default function TechnologyDetail() {
   const { techId } = useParams();
-  const { technologies, updateStatus, updateNotes } = useTechnologies(); // ← добавили updateStatus
+  const { technologies, updateStatus, updateNotes } = useTechnologies();
 
   const technology = technologies.find(t => t.id === parseInt(techId));
-
   const [notes, setNotes] = useState('');
+
+  const countryName = technology?.originCountry || null;
+  const { data: country, loading, error } = useCountryInfo(countryName);
 
   useEffect(() => {
     if (technology) {
@@ -47,6 +50,27 @@ export default function TechnologyDetail() {
           <h3>Описание</h3>
           <p>{technology.description}</p>
         </div>
+
+        {countryName && (
+          <div className="detail-section">
+            <h3>Страна происхождения</h3>
+            {loading && <p>Загрузка данных о стране...</p>}
+            {error && <p className="text-error">⚠️ {error}</p>}
+            {country && (
+              <div>
+                <img
+                  src={country.flags.png.trim()}
+                  alt={`Флаг ${country.name.common}`}
+                  style={{ width: '40px', marginRight: '10px', verticalAlign: 'middle' }}
+                />
+                <strong>{country.name.common}</strong><br />
+                Столица: {country.capital?.[0] || '—'}<br />
+                Население: {country.population?.toLocaleString() || '—'}<br />
+                Язык(и): {Object.values(country.languages || {}).join(', ')}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="detail-section">
           <h3>Статус изучения</h3>

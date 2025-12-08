@@ -2,24 +2,25 @@ import { Link } from 'react-router-dom';
 import { useState} from 'react';
 import useTechnologies from '../useTechnologies';
 import QuickActions from '../components/QuickActions';
+import BulkStatusEditor from '../components/BulkStatusEditor';
+import DeadlineSetter from '../components/DeadlineSetter';
 
 export default function TechnologyList() {
-const { technologies, cycleStatus, updateAllToCompleted, resetAllStatuses } = useTechnologies();
+const { technologies, updateStatusBulk, cycleStatus, updateAllToCompleted, resetAllStatuses } = useTechnologies();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
-
   const filteredTechnologies = technologies.filter(tech => {
     const matchesSearch = searchQuery
       ? tech.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tech.description.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
-
     const matchesFilter = activeFilter === 'all'
       ? true
       : tech.status === activeFilter;
 
     return matchesSearch && matchesFilter;
+    
   });
 
   return (
@@ -29,6 +30,11 @@ const { technologies, cycleStatus, updateAllToCompleted, resetAllStatuses } = us
         onResetAll={resetAllStatuses}
         technologies={technologies}
       />
+      <BulkStatusEditor
+  technologies={filteredTechnologies}
+  onUpdateStatusBulk={updateStatusBulk}
+/>
+<DeadlineSetter />
 
       <div className="search-box">
         <input
@@ -66,6 +72,12 @@ const { technologies, cycleStatus, updateAllToCompleted, resetAllStatuses } = us
     <div key={tech.id} className="technology-item">
       <h3>{tech.title}</h3>
       <p>{tech.description}</p>
+      {tech.deadline && (
+  <div className="tech-deadline">
+    📅 Дедлайн: <strong>{new Date(tech.deadline).toLocaleDateString('ru-RU')}</strong>
+  </div>
+
+)}
       <div className="technology-meta">
         <span
           className={`status status-${tech.status} clickable`}

@@ -1,18 +1,8 @@
 import { useState } from 'react';
 import Modal from '../Modal';
 
-function QuickActions({ onUpdateAllStatus, onResetAll, technologies }) {
+function QuickActions({ onUpdateAllStatus, onResetAll}) {
   const [showExportModal, setShowExportModal] = useState(false);
-
-  const handleExport = () => {
-    const data = {
-      exportedAt: new Date().toISOString(),
-      technologies: technologies
-    };
-    const dataStr = JSON.stringify(data, null, 2);
-    console.log('Данные для экспорта:', dataStr);
-    setShowExportModal(true);
-  };
 
   return (
     <div className="quick-actions">
@@ -23,9 +13,6 @@ function QuickActions({ onUpdateAllStatus, onResetAll, technologies }) {
         </button>
         <button onClick={onResetAll} className="btn btn-warning">
           🔄 Сбросить все статусы
-        </button>
-        <button onClick={handleExport} className="btn btn-info">
-          📤 Экспорт данных
         </button>
       </div>
 

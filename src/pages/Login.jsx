@@ -8,13 +8,13 @@ function Login({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (username === 'admin' && password === 'password') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('username', username);
-      
+
       onLogin(username);
-      
+
       navigate('/');
     } else {
       alert('Неверные данные для входа');
@@ -34,7 +34,7 @@ function Login({ onLogin }) {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label>Пароль:</label>
           <input
@@ -44,7 +44,7 @@ function Login({ onLogin }) {
             required
           />
         </div>
-        
+
         <button type="submit">Войти</button>
       </form>
     </div>
